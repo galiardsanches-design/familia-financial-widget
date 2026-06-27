@@ -35,22 +35,18 @@ class FinanceWidget : AppWidgetProvider() {
                 putExtra("widgetId", widgetId)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
-            views.setOnClickPendingIntent(
-                R.id.btn_income,
+            views.setOnClickPendingIntent(R.id.btn_income,
                 PendingIntent.getActivity(context, widgetId * 2, incomeIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            )
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
 
             val expenseIntent = Intent(context, AddTransactionActivity::class.java).apply {
                 putExtra("type", "expense")
                 putExtra("widgetId", widgetId)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
-            views.setOnClickPendingIntent(
-                R.id.btn_expense,
+            views.setOnClickPendingIntent(R.id.btn_expense,
                 PendingIntent.getActivity(context, widgetId * 2 + 1, expenseIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            )
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
 
             appWidgetManager.updateAppWidget(widgetId, views)
             signInAndLoadBalance(views, appWidgetManager, widgetId)
@@ -79,17 +75,18 @@ class FinanceWidget : AppWidgetProvider() {
             FirebaseFirestore.getInstance().collection("finances")
                 .get()
                 .addOnSuccessListener { result ->
-                    var balance = 0.0
+                    var balance = 0L
                     for (doc in result) {
-                        val amount = doc.getDouble("amount") ?: 0.0
+                        val amount = doc.getLong("amount") ?: 0L
                         val type = doc.getString("type") ?: ""
                         balance += if (type == "income") amount else -amount
                     }
-                    views.setTextViewText(R.id.tv_balance, "Баланс: %.0f ₸".format(balance))
+                    val formatted = "%,d ₸".format(balance).replace(",", " ")
+                    views.setTextViewText(R.id.tv_balance, formatted)
                     appWidgetManager.updateAppWidget(widgetId, views)
                 }
                 .addOnFailureListener {
-                    views.setTextViewText(R.id.tv_balance, "Баланс: —")
+                    views.setTextViewText(R.id.tv_balance, "—")
                     appWidgetManager.updateAppWidget(widgetId, views)
                 }
         }

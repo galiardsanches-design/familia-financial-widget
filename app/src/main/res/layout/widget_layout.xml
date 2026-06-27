@@ -4,49 +4,64 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/widget_background"
-    android:padding="16dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp"
     android:gravity="center_vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Familia Financial"
+        android:textColor="#80FFFFFF"
+        android:textSize="11sp"
+        android:letterSpacing="0.12"
+        android:gravity="center"
+        android:layout_marginBottom="4dp" />
 
     <TextView
         android:id="@+id/tv_balance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Баланс: ..."
+        android:text="—"
         android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textSize="32sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="14dp" />
+        android:layout_marginBottom="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="48dp"
         android:orientation="horizontal"
         android:weightSum="2">
 
-        <Button
+        <TextView
             android:id="@+id/btn_income"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginEnd="6dp"
-            android:text="+ Доход"
+            android:text="＋ Доход"
             android:textColor="#FFFFFF"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:backgroundTint="#4CAF50" />
+            android:gravity="center"
+            android:background="@drawable/btn_income_bg" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_expense"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="6dp"
-            android:text="− Расход"
+            android:text="－ Расход"
             android:textColor="#FFFFFF"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:backgroundTint="#F44336" />
+            android:gravity="center"
+            android:background="@drawable/btn_expense_bg" />
 
     </LinearLayout>
 
