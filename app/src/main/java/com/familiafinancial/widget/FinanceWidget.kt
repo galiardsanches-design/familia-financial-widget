@@ -76,7 +76,7 @@ class FinanceWidget : AppWidgetProvider() {
             appWidgetManager: AppWidgetManager,
             widgetId: Int
         ) {
-            FirebaseFirestore.getInstance().collection("transactions")
+            FirebaseFirestore.getInstance().collection("finances")
                 .get()
                 .addOnSuccessListener { result ->
                     var balance = 0.0
@@ -85,7 +85,7 @@ class FinanceWidget : AppWidgetProvider() {
                         val type = doc.getString("type") ?: ""
                         balance += if (type == "income") amount else -amount
                     }
-                    views.setTextViewText(R.id.tv_balance, "Баланс: %.2f ₽".format(balance))
+                    views.setTextViewText(R.id.tv_balance, "Баланс: %.0f ₸".format(balance))
                     appWidgetManager.updateAppWidget(widgetId, views)
                 }
                 .addOnFailureListener {

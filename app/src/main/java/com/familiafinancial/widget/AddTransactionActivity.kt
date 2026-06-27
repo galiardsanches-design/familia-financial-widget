@@ -65,13 +65,22 @@ class AddTransactionActivity : AppCompatActivity() {
     }
 
     private fun saveTransaction(amount: Double, comment: String, btnSave: Button) {
+        val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            .format(java.util.Date())
+        val user = auth.currentUser
         val transaction = hashMapOf(
             "type" to transactionType,
-            "amount" to amount,
-            "comment" to comment,
-            "timestamp" to Timestamp.now()
+            "amount" to amount.toLong(),
+            "description" to comment,
+            "category" to if (transactionType == "income") "other_income" else "other",
+            "categoryIcon" to if (transactionType == "income") "💰" else "💸",
+            "categoryLabel" to if (transactionType == "income") "Прочий доход" else "Прочее",
+            "date" to today,
+            "createdAt" to Timestamp.now(),
+            "createdBy" to (user?.email ?: "widget"),
+            "createdByName" to "Виджет"
         )
-        db.collection("transactions")
+        db.collection("finances")
             .add(transaction)
             .addOnSuccessListener {
                 Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
