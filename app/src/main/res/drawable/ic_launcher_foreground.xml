@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Символ рубля -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,20 L60,20 Q75,20 75,35 Q75,50 60,50 L40,50 L40,20Z M40,50 L65,50 L65,58 L40,58 L40,50Z M40,62 L65,62 L65,70 L40,70 L40,62Z M40,70 L40,88 L50,88 L50,70Z" />
+</vector>
