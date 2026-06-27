@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "4429864982",
+    "project_id": "familiafinancial",
+    "storage_bucket": "familiafinancial.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "ЗАМЕНИТЕ_НА_ANDROID_APP_ID",
+        "android_client_info": {
+          "package_name": "com.familiafinancial.widget"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZww6isdpH3lJ5v7iOQQMlhQwIEojaVNg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
