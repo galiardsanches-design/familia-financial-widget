@@ -9,21 +9,22 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AddTransactionActivity : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
     private var transactionType = "income"
-    private var widgetId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_transaction)
 
         db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
         transactionType = intent.getStringExtra("type") ?: "income"
-        widgetId = intent.getIntExtra("widgetId", 0)
 
         val tvTitle = findViewById<TextView>(R.id.tv_title)
         val etAmount = findViewById<EditText>(R.id.et_amount)
@@ -32,7 +33,6 @@ class AddTransactionActivity : AppCompatActivity() {
         val btnCancel = findViewById<Button>(R.id.btn_cancel)
 
         tvTitle.text = if (transactionType == "income") "Добавить доход" else "Добавить расход"
-
         btnCancel.setOnClickListener { finish() }
 
         btnSave.setOnClickListener {
@@ -41,33 +41,47 @@ class AddTransactionActivity : AppCompatActivity() {
                 Toast.makeText(this, "Введите сумму", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             val amount = amountText.toDoubleOrNull()
             if (amount == null || amount <= 0) {
                 Toast.makeText(this, "Введите корректную сумму", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            val transaction = hashMapOf(
-                "type" to transactionType,
-                "amount" to amount,
-                "comment" to etComment.text.toString().trim(),
-                "timestamp" to Timestamp.now()
-            )
-
             btnSave.isEnabled = false
-            db.collection("transactions")
-                .add(transaction)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
-                    refreshWidget()
-                    finish()
-                }
+            ensureSignedIn { saveTransaction(amount, etComment.text.toString().trim(), btnSave) }
+        }
+    }
+
+    private fun ensureSignedIn(onReady: () -> Unit) {
+        if (auth.currentUser != null) {
+            onReady()
+        } else {
+            auth.signInAnonymously()
+                .addOnSuccessListener { onReady() }
                 .addOnFailureListener { e ->
-                    btnSave.isEnabled = true
-                    Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Ошибка входа: ${e.message}", Toast.LENGTH_LONG).show()
+                    findViewById<Button>(R.id.btn_save).isEnabled = true
                 }
         }
+    }
+
+    private fun saveTransaction(amount: Double, comment: String, btnSave: Button) {
+        val transaction = hashMapOf(
+            "type" to transactionType,
+            "amount" to amount,
+            "comment" to comment,
+            "timestamp" to Timestamp.now()
+        )
+        db.collection("transactions")
+            .add(transaction)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
+                refreshWidget()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                btnSave.isEnabled = true
+                Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun refreshWidget() {
